@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Job Update | Sebez {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container-fluid bg-light pb-5">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-lg-6 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center fw-light mb-3 fs-5">Update Job Details</h5>
+                    <form method="POST"> {% csrf_token %}
+                        {{ form|crispy }}
+
+                        <div class="mt-5">
+                            <button class="btn btn-primary me-2" type="submit" id="submitBtn">Save Changes</button>
+                            {% if job.status == 1%}
+                            <a class="btn btn-secondary" href="{% url 'jobs:job-detail' job.slug %}">Cancel</a>
+                            {% else %}
+                            <a class="btn btn-secondary" href="{% url 'jobs:employer-home' %}">Cancel</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    const status = document.querySelector("#id_status");
+    const btn = document.querySelector("#submitBtn");
+    status.addEventListener("change", function () {
+        if (status.value == 0) {
+            btn.innerHTML = "Save as Draft";
+        } else {
+            btn.innerHTML = "Save Changes";
+        }
+    })
+</script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary text-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+{% endblock %}

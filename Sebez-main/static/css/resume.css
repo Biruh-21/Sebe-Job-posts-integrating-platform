@@ -1,0 +1,129 @@
+#template-1 {
+    width: 8.3in;
+    /* height: 11.7in; */
+    position: relative;
+    box-sizing: border-box;
+
+}
+
+#header1 {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #188DA6;
+    top: 0;
+
+}
+
+#body1 {
+    padding: 50px;
+
+}
+
+#header2 {
+    margin-top: 40px;
+}
+
+#header2 #left .firstname,
+.lastname {
+    font-size: 36px;
+    line-height: 42px;
+    font-weight: bold;
+    color: #188DA6;
+    text-transform: uppercase;
+}
+
+#header2 #left .profession {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 18px;
+    color: #333;
+}
+
+#header2 #right {
+    text-align: right;
+    font-size: 14px;
+}
+
+#profile {
+    margin-top: 50px;
+}
+
+.sectionheader {
+    margin: 25px 0 10px;
+    padding-bottom: 5px;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #188DA6;
+}
+
+#profile .jobdescription {
+    font-size: 14px;
+    width: 95%;
+}
+
+.experience {
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.corporatename {
+    color: #188DA6;
+    font-weight: 500;
+}
+
+.corporatelocation,
+.workingdate {
+    font-size: 14px;
+}
+
+.experiencedesc .workas {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.experiencedesc .desc {
+    font-size: 14px;
+}
+
+.oneskill .skillname {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    color: #333;
+    font-size: 14px;
+}
+
+.oneskill .skilllevel {
+    width: 100%;
+    height: 5px;
+    background-color: #b3e9f5;
+    border-radius: 5px;
+}
+
+.oneskill .skilllevel .skillrate {
+    width: 75%;
+    height: 5px;
+    background-color: #188DA6;
+    border-radius: 5px;
+}
+
+.eduhead .firstrow {
+    font-weight: 500;
+}
+
+.eduhead .secondrow {
+    color: #333;
+    margin-top: -15px;
+    font-size: 14px;
+}
+
+.oneeducations .desc {
+    font-size: 14px;
+}
+
+.eduhead .school {
+    font-weight: 500;
+    color: #188DA6;
+}

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% load query_transform %}
+
+{% block title %} Jobs in Ethiopia | Sebez.com {% endblock %}
+
+{% block main %}
+
+{% include "navbar.html" %}
+
+<div class="container py-5">
+    <div class="col-lg-8">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show pb-2" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="col-lg-11 mb-5">
+        <form action="{% url 'jobs:job-search' %}" method="get" class="d-flex flex-column flex-md-row">
+            <div class="input-group mb-3 me-lg-2">
+                <span class="input-group-text bg-white" id="addon1"><strong>What</strong></span>
+                <input type="text" class="form-control" placeholder="Job title or keyword" aria-label="Username"
+                    aria-describedby="addon1" name="q">
+            </div>
+            <div class="input-group mb-3 me-lg-2">
+                <span class="input-group-text bg-white" id="addon2"><strong>Where</strong></span>
+                <input type="text" class="form-control" placeholder="Location" aria-label="Username"
+                    aria-describedby="addon1" name="l">
+            </div>
+            <div class="input-group mb-3">
+                <button class="btn btn-primary btn-block" type="submit"> Search </button>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                {% for job in jobs %}
+                {% if job not in reported_jobs %}
+                <div class="card py-3 px-2 job border-bottom">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-1 job-title">
+                                <a href="{% url 'jobs:job-detail' job.slug %}" class="stretched-link mb-2">
+                                    {{ job.title }}
+                                </a>
+                            </h4>
+                            <div class="dropdown" style="z-index: 100;">
+                                <span class="px-1" type="button" id="dp-menu" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="fas fa-ellipsis-h"></i></span>
+                                <ul class="dropdown-menu p-2" aria-labelledby="dp-menu">
+                                    <li class="mt-2">
+                                        {% csrf_token %}
+                                        <button class="bookmark" value="{{ job.pk }}" title="Save Job">
+                                            {% if job in saved_jobs %}
+                                            <i class="fas fa-bookmark me-2"></i>Unsave
+                                            {% else %}
+                                            <i class="far fa-bookmark me-2"></i>Save
+                                            {% endif %}
+                                        </button>
+                                    </li>
+                                    <li class="mt-2">
+                                        <button class="bookmark" value="{{ job.pk }}" title="Not Interested">
+                                            <i class="fas fa-ban me-2"></i>Not Interested
+                                        </button>
+                                    </li>
+                                    <li class="mt-2" title="Report Job"><a href="{% url 'jobs:report' job.slug %}"
+                                            class="text-black"><i class="far fa-flag ms-1 me-2"></i>Report job</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mb-2 text-muted">
+                            <span class="company">{{ job.employer }}</span>
+                            {% if job.location != None %}
+                            <span class="dot"></span>
+                            <span>{{ job.location }}</span>
+                            {% endif %}
+                        </div>
+                        <p class="card-text job-summary">
+                            {% if job.summary %}
+                            {{ job.summary|truncatechars:200 }}
+                            {% elif job.source_link == None %}
+                            {{ job.description|truncatechars:200|safe }}
+                            {% endif %}
+                        </p>
+                        <div class="d-flex d-column d-md-row justify-content-between">
+                            <div>
+                                <span>
+                                    {% if job.source_link != None %}
+                                    {% if "ethiojobs" in job.source_link %}
+                                    <span class="small muted">From www.ethiojobs.com</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="d-flex small text-muted">
+                                <p class="">{{ job.date_posted|date:"M d"}}</p>
+                                {% if job.level != None %}
+                                <span class="dot"></span>
+                                {% if job.level == 1 %}
+                                <span class="">Entry Level</span>
+                                {% elif job.level == 2 %}
+                                <span class="">Mid Level</span>
+                                {% elif job.level == 3 %}
+                                <span class="">Senior Level</span>
+                                {% else %}
+                                <span class=""> Level</span>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="small text-muted">
+                                <span><i class="fas fa-briefcase small text-muted"></i>
+                                    {{ job.get_job_type_display }}</span>
+                                {% if job.deadline != None %}
+                                <span class="dot"></span>
+                                <span><i class="far fa-clock"></i>
+                                    <strong><em>{{ job.deadline|date:"M d"}}</em></strong> </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <br>
+                <div class="container my-5 py-2 d-flex justify-content-center bg-white ">
+                    <div class="pagination">
+                        {% if page_obj.has_previous %}
+                        <a href="{% url 'jobs:job-list' %}?{% query_transform request page=1 %}"
+                            class="btn text-primary mx-2 ps-1" title="First Page">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="{% url 'jobs:job-list' %}?{% query_transform request page=page_obj.previous_page_number %}"
+                            class="btn text-primary mx-2 px-1" title="Previous Page"><i
+                                class="fas fa-angle-left me-2"></i><span>Prev</span>
+                        </a>
+                        {% else %}
+                        <a href="#" class="btn disabled text-primary mx-2 ps-1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="#" class="btn disabled text-primary mx-2 px-1">
+                            <i class="fas fa-angle-left me-2"></i><span>Prev</span>
+                        </a>
+                        {% endif %}
+
+                        <span class="btn disabled mx-2 current">
+                            {{ page_obj.number }}
+                        </span>
+
+                        {% if page_obj.has_next %}
+                        <a href="{% url 'jobs:job-list' %}?{% query_transform request page=page_obj.next_page_number %}"
+                            class="btn text-primary mx-2 px-1" title="Next Page"><span>Next</span><i
+                                class="fas fa-angle-right ms-2"></i>
+                        </a>
+                        <a href="{% url 'jobs:job-list' %}?{% query_transform request page=page_obj.paginator.num_pages %}"
+                            class="btn text-primary mx-2 pe-1" title="Last Page"><i
+                                class="fas fa-angle-double-right"></i>
+                        </a>
+                        {% else %}
+                        <a href="#" class="btn disabled text-primary mx-2 px-1">
+                            <span>Next</span><i class="fas fa-angle-right ms-2"></i>
+                        </a>
+                        <a href="#" class="btn disabled text-primary mx-2 pe-1">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="position-sticky ps-4" style="top: 2rem">
+                    <h4>Filter by</h4>
+                    <div id="filter">
+                        <form action="" method="get">
+                            {{ filter.form.as_p }}
+                            <input type="submit" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+<script src="{% static 'accounts/js/app.js' %}"></script>
+{% endblock %}

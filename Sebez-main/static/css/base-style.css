@@ -1,0 +1,92 @@
+/* Main CSS style used across all pages */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(240, 240, 240);
+}
+
+.mynav {
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 2px 2px -1px rgba(22, 16, 16, 0.2);
+}
+
+a {
+    text-decoration: none;
+}
+
+.job-title a {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* .job-title a:hover {
+    color: blue;
+} */
+.job {
+    border: none;
+}
+
+.job:hover {
+    background-color: rgb(248, 248, 248);
+    /* background-color: #eee; */
+}
+
+.job-summary {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.95rem;
+}
+
+.job-desc {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.dot:after {
+    content: "·";
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.listingInfoHeader {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* #jobtype {
+    border: 1px solid rgb(69, 69, 69);
+} */
+.filter-btn {
+    background-color: rgb(137, 137, 137);
+}
+
+a.nav-link {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.cardheader {
+    padding: 20px 20px 10px;
+    border-radius: 5px 5px 0 0;
+    background-color: #0077b6;
+    color: white;
+}
+
+.bookmark {
+    all: unset;
+    padding: 0 5px;
+    border-radius: 50%;
+}
+
+.bookmark:hover {
+    cursor: pointer;
+}
+
+#filter form p label {
+    margin-right: 1rem;
+}

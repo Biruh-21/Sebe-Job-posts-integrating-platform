@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} My Drafts | Sebez.com {% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block main %}
+
+{% include "navbar.html" %}
+
+<div class="container py-5">
+    <div class="container">
+        <div class="col-lg-8 mx-auto">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show pb-2" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-lg-8 mb-5 mx-auto">
+            <form action="{% url 'jobs:job-search' %}" method="get" class="d-flex flex-column flex-md-row">
+                <div class="input-group mb-3 me-lg-2 flex-grow-2">
+                    <input type="text" class="form-control p-2" placeholder="Job title, name or keyword"
+                        aria-describedby="addon1" name="q">
+                </div>
+                <div class="input-group mb-3 flex-shrink-1" style="width: auto;">
+                    <button class=" btn btn-primary btn-block" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="cardheader d-flex justify-content-between bg-white text-dark border-2 border-bottom">
+                        <h5 class="card-title">My Jobs</h4>
+                    </div>
+                    {% for job in employer_jobs %}
+                    <div class="card-body border-bottom">
+                        <p class="job-title mb-3 ">
+                            <a href="{% url 'jobs:job-update' job.slug %}" class="normal-links"> {{ job.title }}</a>
+                        </p>
+                        <div class="job-metadata d-flex justify-content-between">
+                            <div class="titleandlocation small text-muted">
+                                <div class="initiated-date width-max">Initiated {{ job.date_posted|date:"M d, Y" }}
+                                </div>
+                                <div class="location width-max">{{ job.location }}</div>
+                            </div>
+                            <div class="candidates width-max px-4">
+                                <span class="fw-500">59</span> applicants
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+{% endblock %}

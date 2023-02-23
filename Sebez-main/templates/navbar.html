@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white mynav pb-3">
+  <div class="container pt-2">
+    <a class="navbar-brand" href="{% url 'jobs:home' %}">
+      <strong><span class="text-primary">Sebez</span></strong>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mynavbar">
+      <ul class="navbar-nav mx-auto mx-lg-1 ms-lg-auto mb-2 mb-lg-0">
+        {% if not request.user.is_authenticated %}
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark active" aria-current="page" href="{% url 'jobs:job-list' %}">Find Work</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark" href="{% url 'jobs:job-create' %}">Post Job</a>
+        </li>
+        <li class="nav-item mx-1 pe-3 border-end">
+          <a class="nav-link text-dark" href="{% url 'jobs:resume-builder' %}">Resume</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link text-primary" href="{% url 'accounts:login' %}">Sign in</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link btn btn-primary text-white" id="signup" href="{% url 'accounts:signup' %}">Get Started</a>
+        </li>
+        {% elif request.user.account_type == 1 %}
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark active" aria-current="page" href="{% url 'jobs:job-list' %}">Find Work</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark" href="{% url 'accounts:js-proposals' user.uid %}">My Jobs</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark" href="{% url 'jobs:resume-builder' %}">Build Resume</a>
+        </li>
+        <li class="nav-item dropdown mx-2 border-start">
+          <a class="nav-link dropdown-toggle" href="#" id="jobseeker-actions" data-bs-toggle="dropdown"
+            aria-expanded="false">My Account</a>
+          <ul class="dropdown-menu" aria-labelledby="jobseeker-actions">
+            <li><a class="dropdown-item" href="{% url 'accounts:js-profile' user.uid %}"><i
+                  class="fas fa-user me-3"></i>Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:js-saved-jobs' user.uid %}"><i
+                  class="fas fa-bookmark me-3"></i>Saved</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                <i class="fas fa-arrow-right me-3"></i>Sign out</a>
+            </li>
+          </ul>
+        </li>
+        {% elif request.user.account_type == 2 %}
+        <li class="nav-item mx-1 border-bottom border-3 border-primary">
+          <a class="nav-link active text-dark" href="{% url 'jobs:job-create' %}">Post Job</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-dark" href="{% url 'jobs:employer-myjobs' %}">My Jobs</a>
+        </li>
+        <li class="nav-item dropdown mx-1">
+          <a class="nav-link dropdown-toggle" href="#" id="employer-actions" data-bs-toggle="dropdown"
+            aria-expanded="false">My Account</a>
+          <ul class="dropdown-menu" aria-labelledby="employer-actions">
+            <li>
+              <a class="dropdown-item" href="#"><i class="fas fa-user me-3"></i>Profile</a>
+            </li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-3"></i>Settings</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                <i class="fas fa-arrow-right me-3"></i>Sign out</a>
+            </li>
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Update profile {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container-fluid main">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-10 col-lg-7 mx-auto">
+                <div class="card border-0 shadow rounded-3 my-5">
+                    <div class="card-body p-4 p-sm-5" style="box-shadow: 0 0 5px rgba(71, 71, 71, 0.4);">
+                        <h5 class="card-title text-center mb-4 fw-light fs-5">Update your profile</h5>
+                        <form method="POST" enctype="multipart/form-data" style="overflow: auto;"> {% csrf_token %}
+                            {{ user_form|crispy }}
+                            <br>
+                            {{ profile_form|crispy }}
+                            <div>
+                                <button class="btn btn-primary mr-2" type="submit" id="submitBtn">Update</button>
+                                <a class="btn btn-secondary" href="{% url 'accounts:js-profile' user.uid %}">Cancel </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+{% endblock %}

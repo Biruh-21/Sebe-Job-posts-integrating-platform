@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {{ job.title }} - Sebez.com {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto px-4">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show pb-2" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if request.user.is_authenticated and request.user in applicants %}
+        <div class="col-lg-8 mx-auto bg-white mt-2 mb-4 px-4 py-2 d-flex flex-column">
+            <span>You have already submitted an application for this job</span>
+            <a class="text-primary small" href="{% url 'accounts:js-proposals' request.user.uid %}">View proposal</a>
+        </div>
+        {% endif %}
+        <div class="col-lg-8 mx-auto bg-white px-4 rounded">
+            <div class="pt-4 pb-2">
+                {% if job.status == 1 %}
+                {% if request.user.account_type == 2 %}
+                <a href="{% url 'jobs:employer-home' %}"> <i class="fas fa-chevron-left me-2"></i> Back to home</a>
+                {% else %}
+                <a href="{% url 'jobs:job-list' %}"> <i class="fas fa-chevron-left me-2"></i> Back to jobs</a>
+                {% endif %}
+                {% else %}
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'jobs:employer-home' %}"> <i class="fas fa-chevron-left me-2"></i> Back to home</a>
+                    <span>Job Preview</span>
+                </div>
+                {% endif %}
+            </div>
+            <article class="job-post pb-5">
+                <hr>
+                <div class="header-meta d-flex justify-content-between">
+                    <div>
+                        <span class="text-dark">
+                            <a href="{% url 'jobs:job-category' job.category.slug %}">{{ job.category }}</a>
+                        </span>
+                        <p class="text-muted">2 days ago</p>
+                    </div>
+                    <div>
+                        {% if request.user == job.employer.user %}
+                        <a href="{% url 'jobs:job-update' job.slug %}"><i class="far fa-edit me-2"></i></a>
+                        <a href="{% url 'jobs:job-delete' job.slug %}"><i class="fas fa-trash me-2 text-danger"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <h3 class="job-title pb-3">{{ job.title }}</h3>
+                <div class="d-flex align-items-end justify-content-between">
+                    <div class="">
+                        <span class="company">{{ job.employer }}</span>
+                        <span class="dot"></span>
+                        <span>{{ job.location }}</span>
+                    </div>
+                    <div class="">
+                        {% if job.level != None %}
+                        {% if job.level == '1' %}
+                        <span class="">Entry Level</span>
+                        {% elif job.level == '2' %}
+                        <span class="">Mid Level</span>
+                        {% else %}
+                        <span class="">Senior Level</span>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="">
+                        <span><i class="fas fa-briefcase small text-muted"></i>
+                            {{ job.get_job_type_display }}</span>
+                        {% if job.deadline != None %}
+                        <span class="dot"></span>
+                        <span><i class="far fa-clock"></i>
+                            <em>{{ job.deadline|date:"M d"}}</em></span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr class="mb-5">
+                <div class="job-desc">
+                    {{ job.description|safe }}
+                </div>
+                {% if job.status == 1 %}
+                <div class="d-flex pt-5 apply">
+                    {% if job.source_link == None and request.user not in applicants %}
+                    <a class="btn btn-primary" href="{% url 'jobs:job-apply' job.slug %}" target="_blank">Apply
+                        Now</a>
+                    {% elif job.source_link == None and request.user in applicants %}
+                    <a class="btn btn-primary disabled" href="#" target="_blank">Apply Now</a>
+                    {% else %}
+                    <a class="btn btn-primary" href="{{ job.source_link }}" target="_blank">View on the Source</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </article>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}

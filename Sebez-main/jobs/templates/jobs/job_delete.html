@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Job Delete {% endblock %}
+
+{% block page_css %}
+<style>
+    body {
+        background: #ebebeb;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-lg-6 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5" style="box-shadow: 0 0 10px rgba(71, 71, 71, 0.4);">
+                    <h5 class="card-title mb-4 fw-light fs-5">Delete Job</h5>
+                    <hr class="my-4" />
+                    <p class="mb-5">Are you sure you want to delete this job post: <strong>"{{ job.title }}"</strong>?
+                    </p>
+                    <br>
+                    <form method="POST"> {% csrf_token %}
+                        <div>
+                            <button class="btn btn-danger" type="submit">Yes, Delete </button>
+                            <a class="btn btn-secondary" href="{% url 'jobs:job-detail' job.slug %}">Cancel </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

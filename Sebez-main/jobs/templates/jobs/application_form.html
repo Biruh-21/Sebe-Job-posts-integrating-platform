@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} {{ job.title }} - Sebez.com {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-7 mx-auto bg-white px-4 rounded">
+            <div class="pt-4 pb-2">
+                <a href="{% url 'jobs:job-detail' job.slug %}"> <i class="fas fa-chevron-left me-2"></i> Back to
+                    post</a>
+            </div>
+            <article class="job-post pb-5">
+                <hr>
+                <h4 class="job-title pb-3">{{ job.title }}</h4>
+                <p>Upload your Resume to apply for this job.</p>
+                <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="small form-check">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        <label class="form-check-label small" for="remember">I have agreed to Terms of Privacy
+                            Policy and Use of
+                            the website</label>
+                    </div>
+                    <div class="mt-5">
+                        <button class="btn btn-primary btn-block" type="submit">Submit Application</button>
+                    </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}

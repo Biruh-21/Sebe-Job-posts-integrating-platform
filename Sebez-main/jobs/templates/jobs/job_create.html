@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} Job Post | Sebez.com {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container-fluid bg-light pb-5">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-lg-6 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center fw-light mb-3 fs-5">Fill Job Details</h5>
+                    <form method="POST"> {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="small form-check">
+                            <input type="checkbox" class="form-check-input" id="remember">
+                            <label class="form-check-label small" for="remember">I have agreed to Terms of Privacy
+                                Policy and Use of the website</label>
+                        </div>
+                        <div class="d-grid mt-5">
+                            <button class="btn btn-primary btn-block" type="submit"> Post Job </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary text-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Profile | Sebez.com {% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show pb-2" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="d-flex my-3">
+                <div class="rounded-circle border border-3 border-primary p-3 large">
+                    <h4>{{ profile_pic }}</h4>
+                </div>
+                <div class="p-3 d-flex justify-content-between">
+                    <h3>{{ request.user.get_full_name }}</h3>
+                    <a href="{% url 'accounts:js-profile-update' request.user.uid %}" class="text-primary">Update</a>
+                </div>
+            </div>
+            <div class="bg-white rounded border border-1 my-4 p-3">
+                <div class="d-flex justify-content-between mb-3">
+                    <span><strong>Resume</strong></span>
+                </div>
+                <div class="d-flex mb-3">
+                    {% if request.user.jobseeker.resume %}
+                    <a href="{{ request.user.jobseeker.resume.url }}" class="btn btn-outline-primary mx-2"
+                        download="">Download resume</a>
+                    <a href="{{ request.user.jobseeker.resume.url }}" target="_blank"
+                        class="btn btn-outline-primary mx-2">My resume</a>
+                    {% endif %}
+                </div>
+                <div class="d-flex flex-column">
+                    <span class="mb-1 text-muted"></span>
+                    <span class="mb-1 text-muted">By continuing, you agree to receiving job opportunities from
+                        employers. We don't recommend uploading resumes with photos. </span>
+                </div>
+            </div>
+            <div class="bg-white rounded border border-1 my-4 p-3">
+                <div class="d-flex justify-content-between mb-3">
+                    <span><strong>Contact information</strong></span>
+                </div>
+                <div class="d-flex flex-column">
+                    <span class="mb-1 text-muted">{{ request.user.get_full_name }}</span>
+                    <span class="mb-1 text-muted">{{ request.user.email }}</span>
+                    <span class="mb-1"><a href="#" class="text-primary">Add phone number</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+    });
+</script>
+{% endblock %}

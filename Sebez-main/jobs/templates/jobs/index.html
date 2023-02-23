@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Job Search | Sebez.com {% endblock %}
+
+{% block main %}
+
+{% include "navbar.html" %}
+
+<div class="container py-5">
+    <div class="col-lg-11 ">
+        <form action="{% url 'jobs:job-search' %}" method="get" class="d-flex flex-column flex-md-row">
+            <div class="input-group mb-3 me-lg-2">
+                <span class="input-group-text bg-white" id="addon1"><strong>What</strong></span>
+                <input type="text" class="form-control" placeholder="Job title or keyword" aria-label="Username"
+                    aria-describedby="addon1" name="q">
+            </div>
+            <div class="input-group mb-3 me-lg-2">
+                <span class="input-group-text bg-white" id="addon2"><strong>Where</strong></span>
+                <input type="text" class="form-control" placeholder="Location" aria-label="Username"
+                    aria-describedby="addon1" name="l">
+            </div>
+            <div class="input-group mb-3">
+                <button class="btn btn-primary btn-block" type="submit"> Search </button>
+            </div>
+        </form>
+    </div>
+    <div class="container px-4 pb-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img src="https://static1.shine.com/l/m/images/blog/job_search_portals.png"
+                    class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold lh-1 mb-3">Home For All job Opportunities</h1>
+                <p class="lead">Find jobs, employment and career opportunities. Sebez is a dedicated firm on the job
+                    announcement and application process. We are aggregating jobs from different sources and presenting
+                    in one place to make finding right jobs easy for everyone.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-5">
+                    <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ======= Counts Section ======= -->
+    <section class="counts section-bg p-5 mt-5 bg-primary text-white">
+        <div class="container d-flex justify-content-between">
+            <div class="col-lg-4 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                <div class="count-box">
+                    <span class="fs-1">148</span>
+                    <p>Permanent jobs</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                <div class="count-box">
+                    <span class="fs-1">31</span>
+                    <p>Contract works</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                <div class="count-box">
+                    <span class="fs-1">45</span>
+                    <p>Remote jobs</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Counts Section -->
+
+    <div class="px-4 pt-5 my-5 text-center">
+        <h1 class="display-4 fw-bold">About Us</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">We are a dedicated firm on the job announcement and application process. Here people
+                got servce according to their needs, for example a recruiter or human resource manager who want to hire
+                a professional can create a recruiter account and be able to have access to services like job posting,
+                managing job post and so many other functionalities.</p>
+            <p class="lead mb-4">If you are a job seeker looking for jobs the job
+                seeker account gives you access to services like applying for a job, managing and tracking your
+                application, online cv builder and other features like this. Our priority is to have a maximum
+                satisfaction of our customers.</p>
+        </div>
+    </div>
+    <div class="my-5">&nbsp;</div>
+    <div class="container mt-5">
+        <h3 class="text-center my-5">Jobs aggregated from</h3>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-6 d-flex align-items-center justify-content-center">
+                <img src="https://photos.smugmug.com/photos/i-c6R9czf/0/7498c127/X2/i-c6R9czf-X2.jpg" class="img-fluid"
+                    alt="">
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-6 d-flex align-items-center justify-content-center">
+                <img src="https://photos.smugmug.com/photos/i-tSWsg2q/0/d49c9bea/X2/i-tSWsg2q-X2.jpg" class="img-fluid"
+                    alt="">
+            </div>
+            <div class="col-lg-3 col-md-4 col-6 d-flex align-items-center justify-content-center">
+                <img src="https://photos.smugmug.com/Clients/i-kzw8hgX/0/4540d21e/X2/AddisJobs-Logo-X2.png"
+                    class="img-fluid" alt="">
+            </div>
+            <div class="col-lg-3 col-md-4 col-6 d-flex align-items-center justify-content-center">
+                <img src="https://photos.smugmug.com/Clients/i-6h9RBx9/0/cb41b81e/X4/logo_jobboard-X4.png"
+                    class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,1020 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Build Resume {% endblock %}
+
+{% block page_css %}
+
+<link rel="stylesheet" href="{% static 'css/resume.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'jobs/css/resume-style.css' %}"> -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    body {
+        background: #eee;
+        /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    }
+
+    #regForm {
+        background-color: #ffffff;
+        margin: 0px auto;
+        padding: 40px;
+        border-radius: 10px
+    }
+
+    h1 {
+        text-align: center
+    }
+
+    input {
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa
+    }
+
+    input.invalid {
+        background-color: #ffdddd
+    }
+
+    .tab {
+        display: none
+    }
+
+    button {
+        background-color: #1172c2;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: Raleway;
+        cursor: pointer
+    }
+
+    button:hover {
+        opacity: 0.8
+    }
+
+    #prevBtn {
+        background-color: #bbbbbb
+    }
+
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5
+    }
+
+    .step.active {
+        opacity: 1
+    }
+
+    .step.finish {
+        background-color: #1172c2
+    }
+
+    .all-steps {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px
+    }
+
+    .thanks-message {
+        display: none
+    }
+
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none
+    }
+
+    .container input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%
+    }
+
+    .container:hover input~.checkmark {
+        background-color: #ccc
+    }
+
+    .container input:checked~.checkmark {
+        background-color: #2196F3
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none
+    }
+
+    .container input:checked~.checkmark:after {
+        display: block
+    }
+
+    .container .checkmark:after {
+        top: 9px;
+        left: 9px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white
+    }
+
+    .form-input {
+        margin-top: 35px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .form-input input {
+        display: none;
+
+    }
+
+    .form-input label {
+        display: block;
+        height: 45px;
+
+        line-height: 50px;
+        text-align: center;
+        background: #1172c2;
+
+        color: #fff;
+        font-size: 15px;
+        font-family: "Open Sans", sans-serif;
+        text-transform: Uppercase;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .form-input img {
+        width: 100%;
+        display: none;
+
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-size: 16px;
+        color: #777;
+    }
+
+    .primary {
+        background-color: #0077b6;
+        color: white !important;
+
+    }
+
+    textarea {
+        font-size: 12px;
+    }
+
+    .ck-content {
+        font-size: 16px !important;
+    }
+
+    .ck-editor__editable {
+        min-height: 150px;
+    }
+
+    .stars {
+        float: left;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .stars input[type=radio]:checked~label:after {
+        background: #1172c2;
+    }
+
+    .stars input[type=radio] {
+        display: none;
+    }
+
+    .stars input[type=radio]:first-child+label {
+        padding-right: 0;
+    }
+
+    .stars:hover input[type=radio]:checked~label:after,
+    .stars label:after {
+        background: #eee;
+    }
+
+    .stars label {
+        box-sizing: border-box;
+        width: 20%;
+        padding-right: 2%;
+        height: 20px;
+        float: right;
+        cursor: pointer;
+
+    }
+
+    .stars label:after {
+        display: block;
+        content: "";
+        height: 20px;
+        width: 100%;
+        float: right;
+        transition: all 0.25s;
+        background: #eee;
+    }
+
+    .stars label:hover:after,
+    .stars label:hover~label:after {
+        background: goldenrod !important;
+    }
+
+    /* choose template */
+    /* .parent{
+            
+        }
+        .parent>.row{
+             display: flex;
+            align-items: center;
+            height: 100%; 
+        } */
+    .oneimg {
+        /* width: 250px; */
+        width: 47%;
+        padding: 5px;
+        box-shadow: 0 0 15px #ddd;
+
+    }
+
+    .oneimg img {
+
+        width: 100%;
+        cursor: pointer;
+        transition: transform 1s;
+        object-fit: cover;
+    }
+
+    .oneimg label {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .imgbgchk:checked+label>.tick_container {
+        opacity: 1;
+    }
+
+    /*         aNIMATION */
+    .imgbgchk:checked+label>img {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+
+    .tick_container {
+        transition: .5s ease;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .tick {
+        background-color: #1172c2;
+        color: white;
+        font-size: 16px;
+        padding: 6px 12px;
+        height: 40px;
+        width: 40px;
+        border-radius: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+{% include "navbar.html" %}
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-8">
+            <form id="regForm" name="onlyform">
+                <h3 id="register" class="text-center">Make a winning resume!</h3>
+                <div class="all-steps" id="all-steps"> <span class="step"></span> <span class="step"></span> <span
+                        class="step"></span> <span class="step"></span> <span class="step"></span> <span
+                        class="step"></span> </div>
+
+                <div class="tab">
+                    <div class="row g-4 d-flex justify-content-around">
+                        <div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="firstname" class="form-label">First name</label>
+                                    <input type="text" class="form-control" id="firstname">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="lastname" class="form-label">Last name</label>
+                                    <input type="text" class="form-control" id="lastname">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="phonenumber" class="form-label">Phone number</label>
+                                    <input type="tel" class="form-control" id="phonenumber">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="address">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="professiontitle" class="form-label">Profession</label>
+                                    <input type="text" class="form-control" id="professiontitle">
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="Postalcode" class="form-label">Postal code</label>
+                                    <input type="text" class="form-control" id="postalcode">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="city" class="form-label">City/Town</label>
+                                    <input type="text" class="form-control" id="city">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab" id="experiencetab">
+                    <div class="oneexperiencecard">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="jobtitle" class="form-label">Job title</label>
+                                <input type="text" class="form-control" id="jobtitle" name="jobtitleinput">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="employer" class="form-label">Employer</label>
+                                <input type="text" class="form-control" id="employer" name="employerinput">
+                            </div>
+                        </div>
+
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-lg-6 row  d-flex justify-content-between">
+                                <div class="col-lg-6">
+                                    <label for="startdate" class="form-label">Start date</label>
+                                    <input type="text" class="form-control" id="startdate" name="startdateinput">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="enddate" class="form-label">End date</label>
+                                    <input type="text" class="form-control" id="enddate" name="enddateinput">
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="jobcity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="jobcity" name="jobcityinput">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="my_editor" class="form-label">Description</label>
+                            <textarea name="my_editor" class="form-control my_editor" rows="3"
+                                style="margin-top: 40px;"></textarea>
+                        </div>
+                        <div class="d-flex flex-row justify-content-between">
+                            <button id="addexperience" onclick="duplicateexperience();" class="btn primary my-4">Add
+                                Experience</button>
+                            <button onclick="removeexperience(this)"
+                                class="closeexperience btn primary my-4">Remove</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="tab" id="educationtab">
+                    <div class="oneeducationcard">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="school" class="form-label">School</label>
+                                <input type="text" class="form-control" id="school" name="schoolinput">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="degree" class="form-label">Degree</label>
+                                <input type="text" class="form-control" id="degree" name="degreeinput">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="graduationdate" class="form-label">Graduation date</label>
+                                <input type="text" class="form-control" id="graduationdate" name="graduationdateinput">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="schoolcity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="schoolcity" name="schoolcityinput">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="my_editoredu" class="form-label">Description</label>
+                            <textarea name="my_editoredu" class="form-control my_editoredu" rows="3"
+                                style="margin-top: 40px;"></textarea>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-between">
+                            <button id="addeducation" onclick="duplicateeducation();" class="btn primary my-4">Add
+                                Education</button>
+                            <button onclick="removeeducation(this)"
+                                class="closeeducation btn primary my-4">Remove</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="tab" id="skilltab">
+                    <div class="row oneskillcard">
+                        <div class="col-lg-6">
+                            <label for="skill" class="form-label">Skill</label>
+                            <input type="text" class="form-control" id="skill" name="skillinput">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="skill" class="form-label">Skill level</label>
+                            <input type="number" class="form-control" id="skilllevel" name="skilllevel">
+                        </div>
+                        <div class="d-flex flex-row justify-content-between">
+                            <button id="addskill" onclick="duplicateskill();" class="btn primary my-4">Add
+                                Skill</button>
+                            <button onclick="removeskill(this)" class="closeskill btn primary my-4">Remove</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="my_editorsummary" class="form-label">Summary</label>
+                        <textarea name="my_editorsummary" class="form-control my_editorsummary" rows="3"
+                            style="margin-top: 40px;"></textarea>
+                    </div>
+                </div>
+
+                <div class="thanks-message tab" id="templatetab">
+                    <h3>Resume made!</h3><span>Your resume is ready! download as pdf!</span>
+                    <button onclick="downloadpdf()">download</button>
+
+                    <div id="template-1" style="display: none;">
+                        <div id="header1">
+
+                        </div>
+                        <div id="body1">
+                            <div id="header2" class="d-flex flex-row justify-content-between">
+                                <div id="left">
+                                    <div class="firstname" name="firstname">
+                                        DAVID
+                                    </div>
+                                    <div class="lastname">
+                                        PARKER
+                                    </div>
+                                    <div class="professiontitle profession">
+                                        PROGRAM MANAGER
+                                    </div>
+                                </div>
+                                <div id="right">
+                                    <div class="phonenumber">
+                                        +251 930 110429
+                                    </div>
+                                    <div class="email">
+                                        biruhtesfaye2121@gmail.com
+                                    </div>
+                                    <div class="fulladdress">
+                                        <div class="address">
+                                            05 Street, New York, USA
+                                        </div>
+                                        <div class="city">
+                                            New York
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="profile">
+                                <div class="sectionheader">PROFILE</div>
+
+                                <p class="jobdescription my_editorsummary">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. nec eros id lacus
+                                    ultrices feugiat sed vel nulla. Etiam leo nulla, dignissim et orci et, varius
+                                    varius ligula. Nulla gravida nunc purus, at luctus est faucibus vitae. Orci
+                                    varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                                    mus. Sed posuere elementum feugiat. Sed at tincidunt leo, ac euismod risus.
+                                    Nullam dignissim tincidunt porttitor. Morbi mauris sapien, convallis quis congue
+                                    id, rhoncus a lacus.
+                                </p>
+                            </div>
+                            <div class="experience">
+                                <div class="sectionheader">EXPERIENCE</div>
+                                <div id="tempexperiencetab">
+                                    <div class="oneexperience row">
+                                        <div class="col-4 experiencemeta">
+                                            <div class="corporatename employer">
+                                                Corporate name
+                                            </div>
+                                            <div class="corporatelocation jobcity">
+                                                05 Street, New York, USA
+                                            </div>
+                                            <div class="workingdate">
+                                                <span class="startdate">2020</span> - <span class="enddate">2022</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-8 experiencedesc">
+                                            <div class="workas">
+                                                Work as <span class="jobtitle">Program Manager</span>
+                                            </div>
+                                            <div class="desc my_editor">
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. nec eros id
+                                                lacus ultrices feugiat sed vel nulla.et, varius varius ligula. Nulla
+                                                gravida nunc purus, at luctus est faucibus vitae. Orci varius
+                                                natoque penatibus et magnis dis parturient montes.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="educationandskill row">
+                                <div class="skillcon col-4">
+                                    <div class="sectionheader">SKILLS</div>
+                                    <div class="skillcon" id="tempskilltab">
+                                        <div class="oneskill">
+                                            <div class="skillname skill"></div>
+                                            <div class="skilllevel">
+                                                <div class="skillrate"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="education col-8">
+                                    <div class="sectionheader">EDUCATION</div>
+                                    <div id="tempeducationtab">
+                                        <div class="oneeducations row">
+                                            <div class="eduhead">
+                                                <div class="firstrow d-flex flex-row">
+                                                    <p class="study"><span class="degree">Computer Science</span> at
+                                                        <span class="school">Harvard University</span>
+                                                    </p>
+                                                </div>
+                                                <div class="secondrow">
+                                                    <p class="place"><span class="educity schoolcity">New York,
+                                                            USA</span> | <span class="graduationdate">2018</span>
+                                                        graduate</p>
+                                                </div>
+                                            </div>
+                                            <div class="desc my_editoredu">
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. nec eros id
+                                                lacus ultrices feugiat sed vel nulla.et, varius varius ligula. Nulla
+                                                gravida nunc purus, at luctus est faucibus vitae. Orci varius
+                                                natoque penatibus et magnis dis parturient montes.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+                <div style="overflow:auto;" id="nextprevious" class="mt-5">
+                    <div style="float:right;" class="d-flex flex-row ">
+                        <button type="button" id="prevBtn" onclick="nextPrev(-1)"
+                            class="btn primary mx-3 px-4">Previous</button>
+                        <button type="button" id="nextBtn" onclick="nextPrev(1)"
+                            class="btn primary mx-3 px-4">Next</button>
+                        <button type="submit" id="submitBtn" class="btn primary mx-3 px-4">Preview</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+<script>
+
+    ClassicEditor.create(document.querySelector('.my_editorsummary'), {
+        removePlugins: ['Heading'],
+        toolbar: ['bold', 'italic', '|', 'bulletedList', 'numberedList', 'blockQuote', 'link'],
+        licenseKey: '',
+    })
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+
+</script>
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        frame.src = "";
+    }
+</script>
+<script>
+    //your javascript goes here
+    var currentTab = 0;
+    document.addEventListener("DOMContentLoaded", function (event) {
+        showTab(currentTab);
+    });
+
+    function showTab(n) {
+        var x = document.getElementsByClassName("tab");
+        if (n < x.length) {
+            console.log(n);
+            x[n].style.display = "block";
+        }
+
+        if (n == 0) {
+            document.getElementById("prevBtn").style.display = "none";
+        } else {
+            document.getElementById("prevBtn").style.display = "inline";
+        }
+        if (n == (x.length - 1)) {
+
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("nextBtn").style.display = "none";
+
+        } else {
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("nextBtn").style.display = "block";
+        }
+        fixStepIndicator(n)
+    }
+
+    function nextPrev(n) {
+        var x = document.getElementsByClassName("tab");
+        // if (n == 1 && !validateForm()) return false;
+        x[currentTab].style.display = "none";
+        currentTab = currentTab + n;
+        if (currentTab >= x.length) {
+            document.getElementById("regForm").submit();
+            return false;
+            alert("sdf");
+            document.getElementById("nextprevious").style.display = "none";
+            document.getElementById("all-steps").style.display = "none";
+            document.getElementById("register").style.display = "none";
+            document.getElementById("text-message").style.display = "block";
+        }
+        showTab(currentTab);
+    }
+
+    function validateForm() {
+        var x, y, i, valid = true;
+        x = document.getElementsByClassName("tab");
+        y = x[currentTab].getElementsByTagName("input");
+        for (i = 0; i < y.length; i++) {
+            if (y[i].value == "") {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        }
+        if (valid) {
+            document.getElementsByClassName("step")[currentTab].className += " finish";
+        }
+        return valid;
+    }
+    function fixStepIndicator(n) {
+        var i, x = document.getElementsByClassName("step");
+        for (i = 0; i < x.length; i++) {
+            x[i].className = x[i].className.replace(" active", "");
+        }
+        if (n < x.length) {
+            x[n].className += " active";
+        }
+
+    }
+
+    const form = document.querySelector("#regForm");
+
+    const experiencetab = document.getElementById("experiencetab");
+    const templatetab = document.getElementById("tempexperiencetab");
+    const closeexperiences = experiencetab.getElementsByClassName("closeexperience");
+    const firstcloseexperience = closeexperiences[0];
+    firstcloseexperience.style.display = "none";
+
+
+    function duplicateexperience() {
+
+        const experiences = experiencetab.getElementsByClassName("oneexperiencecard");
+        const firstexperience = experiences[0];
+        const experienceclone = firstexperience.cloneNode(true);
+
+        const tempexperiences = templatetab.getElementsByClassName("oneexperience");
+        const tempfirstexperience = tempexperiences[0];
+        const tempexperienceclone = tempfirstexperience.cloneNode(true);
+
+        let fff = experienceclone.getElementsByClassName("closeexperience");
+        let ff = fff[0];
+        ff.style.display = "block"
+        templatetab.appendChild(tempexperienceclone);
+        experiencetab.appendChild(experienceclone);
+    }
+    function removeexperience(e) {
+        console.log(e.parentElement);
+        e.parentElement.parentElement.remove();
+    }
+
+    const educationtab = document.getElementById("educationtab");
+    const tempeducationtab = document.getElementById("tempeducationtab");
+    const closeeducations = educationtab.getElementsByClassName("closeeducation");
+    const firstcloseeducation = closeeducations[0];
+    firstcloseeducation.style.display = "none";
+
+
+    function duplicateeducation() {
+        const educations = educationtab.getElementsByClassName("oneeducationcard");
+        const firsteducation = educations[0];
+        const educationclone = firsteducation.cloneNode(true);
+
+        const tempeducations = tempeducationtab.getElementsByClassName("oneeducations");
+        const tempfirsteducation = tempeducations[0];
+        const tempeducationclone = tempfirsteducation.cloneNode(true);
+
+        let ggg = educationclone.getElementsByClassName("closeeducation");
+        let gg = ggg[0];
+        gg.style.display = "block"
+        tempeducationtab.appendChild(tempeducationclone);
+        educationtab.appendChild(educationclone);
+
+    }
+    function removeeducation(e) {
+        console.log(e.parentElement);
+        e.parentElement.parentElement.remove();
+    }
+
+    const skilltab = document.getElementById("skilltab");
+    const tempskilltab = document.getElementById("tempskilltab");
+    const closeskills = skilltab.getElementsByClassName("closeskill");
+    const firstcloseskill = closeskills[0];
+    firstcloseskill.style.display = "none";
+
+
+    function duplicateskill() {
+        const skills = skilltab.getElementsByClassName("oneskillcard");
+        const firstskill = skills[0];
+        const skillclone = firstskill.cloneNode(true);
+
+        const tempskills = tempskilltab.getElementsByClassName("oneskill");
+        const tempfirstskill = tempskills[0];
+        const tempskillclone = tempfirstskill.cloneNode(true);
+
+        let ggg = skillclone.getElementsByClassName("closeskill");
+        let gg = ggg[0];
+        gg.style.display = "block"
+        tempskilltab.appendChild(tempskillclone);
+        skilltab.appendChild(skillclone);
+
+
+
+    }
+    function removeskill(e) {
+        console.log(e.parentElement);
+        e.parentElement.parentElement.remove();
+    }
+
+    function downloadpdf() {
+        // const choosedtemplate = form.elements['imgbackground'].value;
+        const choosedtemplate = "template-1";
+
+        const temp = document.getElementById(choosedtemplate);
+
+        html2pdf()
+            .from(temp)
+            .save();
+
+    }
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // const choosedtemplate = form.elements['imgbackground'].value;
+        const choosedtemplate = "template-1";
+        const temp = document.getElementById(choosedtemplate);
+        temp.style.display = "block";
+        console.log(temp.style.display);
+
+        const firstname = form.elements['firstname'].value;
+        console.log(firstname);
+        const lastname = form.elements['lastname'].value;
+        const email = form.elements['email'].value;
+        const phonenumber = form.elements['phonenumber'].value;
+        const address = form.elements['address'].value;
+        const professiontitle = form.elements['professiontitle'].value;
+        const postalcode = form.elements['postalcode'].value;
+        const city = form.elements['city'].value;
+        // document.querySelector("form[name='onlyform'] > input.jobtitle").value = "blah"
+        // document.forms[0].querySelector(".jobtitle").value
+        const jobtitle = document.getElementsByName("jobtitleinput");
+        const employer = document.getElementsByName("employerinput");
+        const startdate = document.getElementsByName("startdateinput");
+        const enddate = document.getElementsByName("enddateinput");
+        const jobcity = document.getElementsByName("jobcityinput");
+        const my_editor = document.getElementsByName("my_editor");
+
+        const school = document.getElementsByName("schoolinput");
+        const degree = document.getElementsByName("degreeinput");
+        const graduationdate = document.getElementsByName("graduationdateinput");
+        const schoolcity = document.getElementsByName("schoolcityinput");
+        const my_editoredu = document.getElementsByName("my_editoredu");
+
+        const skill = document.getElementsByName("skillinput");
+        // const skilllevel = document.getElementsByName("skilllevel");
+        const skilllevel = document.getElementsByName("skilllevel");
+
+        // const stars = document.getElementsByClassName("stars");
+
+        // console.log(skilllevel);
+        const my_editorsummary = form.elements['my_editorsummary'].value;
+
+
+
+        // console.log(temp);
+        const firstnamex = temp.getElementsByClassName('firstname');
+        const lastnamex = temp.getElementsByClassName('lastname');
+        const emailx = temp.getElementsByClassName('email');
+        const phonenumberx = temp.getElementsByClassName('phonenumber');
+        const addressx = temp.getElementsByClassName('address');
+        const professiontitlex = temp.getElementsByClassName('professiontitle');
+        const postalcodex = temp.getElementsByClassName('postalcode');
+        const cityx = temp.getElementsByClassName('city');
+        const jobtitlex = temp.getElementsByClassName('jobtitle');
+        const employerx = temp.getElementsByClassName('employer');
+        const startdatex = temp.getElementsByClassName('startdate');
+        const enddatex = temp.getElementsByClassName('enddate');
+        const jobcityx = temp.getElementsByClassName('jobcity');
+        const my_editorx = temp.getElementsByClassName('my_editor');
+        const schoolx = temp.getElementsByClassName('school');
+        const degreex = temp.getElementsByClassName('degree');
+        const graduationdatex = temp.getElementsByClassName('graduationdate');
+        const schoolcityx = temp.getElementsByClassName('schoolcity');
+        const my_editoredux = temp.getElementsByClassName('my_editoredu');
+        const skillx = temp.getElementsByClassName('skill');
+        const skilllevelx = temp.getElementsByClassName('skillrate');
+        const my_editorsummaryx = temp.getElementsByClassName('my_editorsummary');
+
+
+        firstnamex[0].innerText = firstname;
+        lastnamex[0].innerText = lastname;
+        emailx[0].innerText = email;
+        phonenumberx[0].innerText = phonenumber;
+        addressx[0].innerText = address;
+        professiontitlex[0].innerText = professiontitle;
+        // postalcodex[0].innerText = postalcode;
+        cityx[0].innerText = city;
+
+        for (i = 0; i < jobtitle.length; i++) {
+            jobtitlex[i].innerText = jobtitle[i].value;
+        }
+        console.log(employer[0].value);
+        for (i = 0; i < employer.length; i++) {
+            employerx[i].innerText = employer[i].value;
+        }
+        for (i = 0; i < startdate.length; i++) {
+            startdatex[i].innerText = startdate[i].value;
+        }
+        for (i = 0; i < enddate.length; i++) {
+            enddatex[i].innerText = enddate[i].value;
+        }
+        for (i = 0; i < jobcity.length; i++) {
+            jobcityx[i].innerText = jobcity[i].value;
+        }
+        for (i = 0; i < my_editor.length; i++) {
+            my_editorx[i].innerHTML = my_editor[i].value;
+        }
+
+        for (i = 0; i < school.length; i++) {
+            schoolx[i].innerText = school[i].value;
+        }
+        for (i = 0; i < degree.length; i++) {
+            degreex[i].innerText = degree[i].value;
+        }
+        for (i = 0; i < graduationdate.length; i++) {
+            graduationdatex[i].innerText = graduationdate[i].value;
+        }
+        for (i = 0; i < schoolcity.length; i++) {
+            schoolcityx[i].innerText = schoolcity[i].value;
+        }
+        for (i = 0; i < my_editoredu.length; i++) {
+            my_editoredux[i].innerHTML = my_editoredu[i].value;
+        }
+        console.log(skill.length);
+
+        for (i = 0; i < skill.length; i++) {
+            console.log(skillx[i]);
+
+            skillx[i].innerText = skill[i].value;
+        }
+
+
+        for (i = 0; i < skilllevel.length; i++) {
+            let aa = parseInt(skilllevel[i].value) * 20;
+            let skillr = aa.toString() + '%';
+            skilllevelx[i].style.width = skillr;
+        }
+
+        // for (j=0; j < stars.length; j++){
+        //     for (i=0; i < skilllevel.length; i++){
+        //     if(skilllevel[i].checked){
+        //         let aa = parseInt(skilllevel[i].value)*20;
+        //         console.log(aa);
+        //         let skillr = aa.toString() + '%'; 
+        //         console.log(skillr);
+        //         console.log(skilllevel[i]);
+        //         skilllevelx[j].style.width = skillr;
+        //     }
+        // }
+        // }
+
+
+        my_editorsummaryx[0].innerHTML = my_editorsummary;
+
+
+        // console.log(choosedtemplate);
+        // console.log(skilllevel);
+    });
+
+</script>
+
+
+{% include "footer.html" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Change active nav element dynamically based on the URL
+    $(document).ready(function () {
+        const currentUrl = location.pathname;
+        $(".navbar-nav li").find("a.active").parent().removeClass("border-bottom border-3 border-primary");
+        $(".navbar-nav li").find("a.active").removeAttr("aria-current");
+        $(".navbar-nav li").find("a.active").removeClass("active");
+
+        if (currentUrl != "/ac/login/" && currentUrl != "/ac/signup/") {
+            $('.navbar-nav li a[href="' + currentUrl + '"]').parent().addClass("border-bottom border-3 border-primary")
+            $('.navbar-nav li a[href="' + currentUrl + '"]').addClass('active');
+            $('.navbar-nav li a[href="' + currentUrl + '"]').attr("aria-current", "page");
+        }
+    });
+</script>
+{% endblock %}

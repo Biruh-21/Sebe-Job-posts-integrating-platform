@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} Verification email has been sent {% endblock %}
+{% block main %}
+{% include "navbar.html" %}
+<div class="container py-4">
+    <div class="row">
+        <div class="card border-0 shadow rounded-3 p-4 col-lg-7 mx-auto">
+            <h5>Hello {{ first_name }}!</h5>
+            <p>Thank you for joining.</p>
+            <p>We have sent you an email containing intructions on how to verify your email
+                address and complete the registration process. Check your <strong>inbox</strong> now.
+            </p>
+            <p><strong>Note: </strong>If you don't get the email for any reason check your spam folder and contact us.
+            </p>
+            <!-- <br> -->
+            <i class="small">** Until you verify your email address, you may not be able to login to your account **</i>
+            <br>
+            <p>Thanks for your interest.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

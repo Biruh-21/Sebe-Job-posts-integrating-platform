@@ -1,0 +1,127 @@
+body {
+    width: 100vw;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(240, 240, 240);
+}
+
+.cardheader {
+    padding: 20px 20px 10px;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cardheader h5 {
+    font-weight: 500;
+}
+
+.project-deadlines .post-date,
+.location,
+.blured {
+    color: #777;
+    font-size: 14px;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.job-title a,
+.normal-links {
+    font-weight: 500;
+    color: #0077b6 !important;
+    text-decoration: none;
+}
+
+.grey-link {
+    color: #777;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.grey-link:hover {
+    text-decoration: underline;
+    color: #0077b6;
+}
+
+.job-title a:hover,
+.normal-links:hover {
+    color: #0077b6;
+    text-decoration: underline;
+}
+
+.job-app-tabs {
+    margin: 20px;
+}
+
+.navitem {
+    margin-right: 20px;
+}
+
+.navitem a {
+    color: #555;
+    font-weight: 500;
+}
+
+.navitem a:hover {
+    /* border-bottom: 2px solid #555; */
+    color: #0077b6;
+}
+
+.navitem a.active {
+    border-bottom: 2px solid #0077b6;
+    color: #0077b6;
+}
+
+.primary {
+    background-color: #0077b6;
+    color: white !important;
+    height: 30px;
+    padding-top: 2px;
+}
+
+.width-max {
+    width: max-content;
+}
+
+/* Job applicants list / for a job / */
+.actions button {
+    margin: 0 5px;
+    transform: scale(1.1)
+}
+
+.jobtitlehead {
+    text-decoration: none;
+    /* font-weight: normal; */
+    color: #0077b6 !important;
+}
+
+.jobtitlehead:hover {
+    text-decoration: underline !important;
+}
+
+.options .options-menu {
+    width: 100px;
+}
+
+.options .options-menu i {
+    margin: 0 10px;
+    transform: scale(0.8)
+}
+
+.options .options-menu li:hover {
+    background-color: #eee;
+}
+
+.options .options-menu button {
+    all: unset;
+    padding: 5px 20px;
+}
+
+.dashboard-title {
+    color: #0077b6;
+}
+
+.purecounter {
+    font-size: 5rem;
+}
